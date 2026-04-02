@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Secrets & Config
+.env
+*.pem
+server/config/oracle_wallet/
+
+# Build files
+client/build/
+client/.next/
+dist/
+
+# Logs
+npm-debug.log*
