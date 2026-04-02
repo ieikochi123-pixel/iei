@@ -1,0 +1,42 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 1. Set the Navy Background */
+body {
+    background-color: #003366; /* Official Navy */
+    color: #FFFFFF; /* Default white text for readability */
+    line-height: 1.6;
+}
+
+/* 2. Set the Gold Accents */
+h1, h2, h3, .gold-text {
+    color: #FFCC00; /* Official Gold */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 3. Navigation Bar Styling */
+#main-nav {
+    background-color: #002244; /* Slightly darker navy for contrast */
+    padding: 1rem 5%;
+    border-bottom: 3px solid #FFCC00; /* Gold border line */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 4. Button Styling */
+.btn-primary {
+    background-color: #FFCC00;
+    color: #003366;
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
