@@ -1,14 +1,26 @@
-// client/script.js
-async function loadIEI() {
-    const res = await fetch('https://your-render-app.onrender.com/api/members');
-    const members = await res.json();
-    
+const API_URL = "https://your-render-app.onrender.com/api";
+
+async function fetchMembers() {
     const grid = document.getElementById('member-grid');
-    grid.innerHTML = members.map(m => `
-        <div class="card" style="background: #003366; border: 2px solid #FFCC00; color: white; padding: 20px;">
-            <h3 style="color: #FFCC00;">${m.full_name}</h3>
-            <p>${m.role_title}</p>
-        </div>
-    `).join('');
+    if (!grid) return; // Only runs on committee page
+
+    try {
+        const response = await fetch(`${API_URL}/members`);
+        const members = await response.json();
+
+        grid.innerHTML = members.map(m => `
+            <div class="member-card">
+                <img src="${m.image_url || 'assets/default.png'}" style="width:100px; height:100px; border-radius:50%;">
+                <h3 style="color: #003366; margin-top:10px;">${m.full_name}</h3>
+                <p style="font-weight:bold; color:#666;">${m.role_title}</p>
+            </div>
+        `).join('');
+    } catch (err) {
+        grid.innerHTML = "<p>Error loading committee data.</p>";
+    }
 }
-loadIEI();
+
+// Initialize based on current page
+window.onload = () => {
+    fetchMembers();
+};
