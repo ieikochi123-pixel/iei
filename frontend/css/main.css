@@ -1,0 +1,81 @@
+@font-face {
+    font-family: 'OldEnglish';
+    src: url('../assets/font/OldEnglishFive.ttf') format('truetype');
+}
+
+:root {
+    --iei-blue: #0B3D91;
+    --iei-gold: #D4AF37;
+    --neon-cyan: #00F2FF;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Header & Logo Alignment */
+.main-header {
+    background-color: var(--iei-blue);
+    color: white;
+    padding: 20px 50px;
+    display: flex;
+    align-items: center;
+    border-bottom: 5px solid var(--iei-gold);
+}
+
+.logo-img {
+    height: 100px;
+    margin-right: 30px;
+    filter: brightness(0) invert(1); /* Turns black logo white */
+}
+
+.brand-title {
+    font-family: 'OldEnglish', serif;
+    font-size: 3rem;
+    margin: 0;
+}
+
+/* Grid Layout */
+.container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Membership Box */
+.btn-membership {
+    background-color: var(--iei-gold);
+    color: var(--iei-blue);
+    padding: 15px 25px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid var(--iei-blue);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Phase 2: Futuristic Trigger Button */
+.btn-neon-trigger {
+    display: inline-block;
+    margin-top: 15px;
+    background: #000;
+    color: var(--neon-cyan);
+    border: 2px solid var(--neon-cyan);
+    padding: 12px 30px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 0 0 5px var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+    animation: portal-pulse 2s infinite;
+}
+
+@keyframes portal-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
+    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 242, 255, 0.8); }
+    100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
+}

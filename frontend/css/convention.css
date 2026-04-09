@@ -1,0 +1,107 @@
+:root {
+    --navy-bg: #0A1F3C;
+    --electric-blue: #007BFF;
+    --accent-orange: #FF8C00;
+    --glass: rgba(255, 255, 255, 0.05);
+}
+
+body.convention-body {
+    margin: 0;
+    background: linear-gradient(135deg, var(--navy-bg) 0%, #000000 100%); /* [cite: 14] */
+    color: white;
+    font-family: 'Open Sans', sans-serif; /* [cite: 17] */
+    scroll-behavior: smooth;
+}
+
+/* 3.1 Header Styling - Fixes overlaps */
+.sticky-nav {
+    position: sticky;
+    top: 0;
+    background: rgba(10, 31, 60, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 15px 5%;
+    border-bottom: 2px solid var(--electric-blue);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.nav-links a:hover { color: var(--electric-blue); }
+
+/* Buttons - Orange Accents [cite: 13, 237] */
+.cta-nav-orange, .btn-orange {
+    background: var(--accent-orange);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.btn-outline {
+    border: 2px solid var(--electric-blue);
+    color: var(--electric-blue);
+    padding: 10px 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 15px;
+    border-radius: 5px;
+}
+
+/* 3.2 Hero Section - Spacing Fix */
+.hero-section {
+    padding: 120px 5%;
+    text-align: center;
+}
+
+.main-title { font-family: 'Montserrat', sans-serif; font-size: 3rem; margin-bottom: 20px; }
+.theme-badge {
+    background: rgba(0, 123, 255, 0.2);
+    border: 1px solid var(--electric-blue);
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 50px;
+    margin: 30px 0;
+    font-weight: bold;
+}
+
+/* 3.5 Focus Strip [cite: 55-62] */
+.special-focus-strip {
+    background: var(--electric-blue);
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    font-weight: bold;
+}
+
+/* 3.4 Card Styling [cite: 19-21] */
+.tracks-section { padding: 80px 5%; text-align: center; }
+.tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.track-card {
+    background: var(--glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px 20px;
+    transition: 0.4s;
+}
+
+.track-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--electric-blue);
+}
