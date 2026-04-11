@@ -2,45 +2,80 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
+const supabase = require('./config/supabase.js'); 
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// 1. Serve static files (CSS, Fonts, JS)
+// Serving the frontend folder as static files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// 2. API Routes (Manual String Match)
-app.use((req, res, next) => {
-    if (req.url === '/api/events') {
-        return res.json([{ title: "39th National Convention", is_convention: true }]);
+// --- 1. HOME CONTENT ENGINE (NEW & REQUIRED) ---
+// This is what the Home Page calls to show Notices, Events, etc.
+app.get('/api/home-content', async (req, res) => {
+    try {
+        console.log("📡 Fetching Home Content for Frontend...");
+        
+        // Fetch data from all 4 tables at once
+        const [notices, events, committee, gallery] = await Promise.all([
+            supabase.from('notices').select('*'),
+            supabase.from('events').select('*'),
+            supabase.from('committee').select('*'),
+            supabase.from('gallery').select('*')
+        ]);
+
+        // Error checking
+        if (notices.error || events.error || committee.error || gallery.error) {
+            console.error("❌ Supabase Fetch Error:", notices.error || events.error || committee.error || gallery.error);
+            return res.status(500).json({ error: "Database fetch failed" });
+        }
+
+        // Send the data back to home.js
+        res.json({
+            notices: notices.data,
+            events: events.data,
+            committee: committee.data,
+            gallery: gallery.data
+        });
+        
+        console.log("✅ Home content sent successfully.");
+    } catch (err) {
+        console.error("🔥 Server Crash:", err);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-    next();
 });
 
-// 3. THE FIX: Manual URL Handling (Bypasses path-to-regexp)
-app.use((req, res, next) => {
-    // If it's an API request we already handled, or it looks like a file (has a dot)
-    if (req.url.startsWith('/api') || req.url.includes('.')) {
-        return next();
-    }
+// --- 2. ADMIN POST ROUTE ---
+app.post('/api/admin/add/:table', async (req, res) => {
+    const { table } = req.params;
+    const rowData = req.body;
 
-    // Route for Convention
-    if (req.url === '/convention') {
-        return res.sendFile(path.join(__dirname, '../frontend/convention/index.html'));
-    }
+    console.log(`🚀 Incoming request for [${table}]:`, rowData);
 
-    // Default to Homepage for everything else
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    try {
+        const { data, error } = await supabase
+            .from(table)
+            .insert([rowData]);
+
+        if (error) {
+            console.error("❌ Supabase Rejected:", error.message);
+            return res.status(400).json({ error: error.message });
+        }
+
+        console.log(`✅ Successfully added to ${table}`);
+        return res.status(200).json({ message: "Success", data });
+    } catch (err) {
+        console.error("🔥 Server Error:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`
-    🚀 IEI PLATFORM IS FINALLY LIVE
-    --------------------------------
-    🏠 Home: http://localhost:${PORT}
-    🌌 Portal: http://localhost:${PORT}/convention
-    `);
+// --- 3. ADMIN PANEL ROUTING ---
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/admin/dashboard.html'));
 });
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
