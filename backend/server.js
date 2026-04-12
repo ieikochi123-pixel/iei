@@ -65,7 +65,9 @@ app.get('/admin', (req, res) => {
 // --- 4. CATCH-ALL FOR SPA ---
 // Change this: app.get('*', ...
 // To this:
-app.get('(.*)', (req, res) => {
+// --- 4. CATCH-ALL FOR SPA ---
+// Using named parameter syntax to satisfy strict Express/path-to-regexp rules
+app.get('/:any*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
