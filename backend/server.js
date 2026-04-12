@@ -62,7 +62,10 @@ app.get('/admin', (req, res) => {
 
 // --- 4. CATCH-ALL FOR SPA ---
 // This ensures that refreshing the page doesn't show an error
-app.get('*', (req, res) => {
+// --- 4. CATCH-ALL FOR SPA ---
+// Change this: app.get('*', ...
+// To this:
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
