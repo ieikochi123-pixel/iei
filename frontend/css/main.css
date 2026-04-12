@@ -3,79 +3,48 @@
     src: url('../assets/font/OldEnglishFive.ttf') format('truetype');
 }
 
+html { scroll-behavior: smooth; }
+
 :root {
-    --iei-blue: #0B3D91;
-    --iei-gold: #D4AF37;
-    --neon-cyan: #00F2FF;
+    --navy: #0A1F3C;
+    --electric: #007BFF;
+    --gold: #FFD700;
+    --orange: #FF8C00;
+    --glass: rgba(255, 255, 255, 0.05);
 }
 
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f8f9fa;
+body { margin: 0; background-color: var(--navy); color: white; font-family: 'Open Sans', sans-serif; }
+
+/* NAV */
+.sticky-nav {
+    position: sticky; top: 0; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 5%; background: rgba(10, 31, 60, 0.95);
+    backdrop-filter: blur(10px); border-bottom: 2px solid var(--electric);
 }
 
-/* Header & Logo Alignment */
-.main-header {
-    background-color: var(--iei-blue);
-    color: white;
-    padding: 20px 50px;
-    display: flex;
-    align-items: center;
-    border-bottom: 5px solid var(--iei-gold);
-}
+.nav-links a { color: white; text-decoration: none; margin: 0 12px; font-weight: bold; font-size: 0.9rem; }
+.nav-links a:hover { color: var(--gold); }
 
-.logo-img {
-    height: 100px;
-    margin-right: 30px;
-    filter: brightness(0) invert(1); /* Turns black logo white */
-}
+/* HERO */
+.hero-section { height: 75vh; display: flex; align-items: center; padding: 0 10%; }
+.hero-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 50px; }
+.old-english-title { font-family: 'OldEnglish', serif; font-size: 4.2rem; color: var(--gold); margin: 0; line-height: 1.1; }
+.sub-title { font-family: 'Montserrat'; letter-spacing: 5px; color: var(--electric); font-size: 1.6rem; }
+.hero-logo img { width: 170px; filter: drop-shadow(0 0 15px var(--electric)); }
 
-.brand-title {
-    font-family: 'OldEnglish', serif;
-    font-size: 3rem;
-    margin: 0;
-}
+/* LAYOUT */
+.container { width: 90%; max-width: 1200px; margin: auto; padding: 50px 0; }
+.section-heading { font-family: 'Montserrat'; color: var(--electric); text-align: center; font-size: 2.2rem; margin-bottom: 40px; }
+.glass-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; }
 
-/* Grid Layout */
-.container {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
+/* NOTICES/EVENTS/GALLERY */
+.scroll-box { max-height: 200px; overflow-y: auto; border-left: 5px solid var(--gold); }
+.convention-card { border: 2px solid var(--orange); text-align: center; }
+.btn-portal { background: var(--orange); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px; font-weight: bold; }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
+.gallery-item img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); transition: 0.4s; }
+.gallery-item img:hover { transform: scale(1.05); border-color: var(--electric); }
 
-/* Membership Box */
-.btn-membership {
-    background-color: var(--iei-gold);
-    color: var(--iei-blue);
-    padding: 15px 25px;
-    text-decoration: none;
-    font-weight: bold;
-    border: 2px solid var(--iei-blue);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Phase 2: Futuristic Trigger Button */
-.btn-neon-trigger {
-    display: inline-block;
-    margin-top: 15px;
-    background: #000;
-    color: var(--neon-cyan);
-    border: 2px solid var(--neon-cyan);
-    padding: 12px 30px;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: 0 0 5px var(--neon-cyan);
-    box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
-    animation: portal-pulse 2s infinite;
-}
-
-@keyframes portal-pulse {
-    0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 242, 255, 0.8); }
-    100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-}
+.contact-flex { display: flex; gap: 30px; }
+.btn-membership { background: var(--electric); color: white; padding: 12px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block; }

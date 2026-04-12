@@ -3,39 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IEI Kochi Local Centre</title>
+    <title>IE(I) Kochi Local Centre</title>
     <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-        <img src="assets/images/logo.png" alt="IEI Logo" class="logo-img">
-        
-        <div class="header-text-container">
-            <h1 class="brand-title">The Institution of Engineers (India)</h1>
-            <div class="sub-title">Kochi Local Centre</div>
-        </div>
+
+    <header class="sticky-nav">
+        <div class="logo-text">IE(I) KOCHI</div>
+        <nav class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#notices">Notices</a>
+            <a href="#events">Events</a>
+            <a href="#about">About</a>
+            <a href="#committee">Committee</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <a href="#membership" class="btn-membership">Membership</a>
     </header>
 
-    <main class="container">
-        <section style="grid-column: span 8;">
-            <h2 class="section-heading">Latest Notices</h2>
-            <div id="notices-container">
-                <p>Loading dynamic notices from Supabase...</p>
+    <section id="home" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-flex">
+                <div class="hero-text">
+                    <h1 class="old-english-title">The Institution of Engineers (India)</h1>
+                    <h2 class="sub-title">KOCHI LOCAL CENTRE</h2>
+                </div>
+                <div class="hero-logo">
+                    <img src="assets/images/logo.png" alt="IEI Logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="notices" class="content-section">
+        <div class="container">
+            <h2 class="section-heading">Notices</h2>
+            <div id="notices-list" class="glass-card scroll-box">
+                <p>Loading latest notices...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="content-section">
+        <div class="container">
+            <h2 class="section-heading">Events</h2>
+            <div class="events-grid">
+                <div class="glass-card event-card convention-card">
+                    <h3>39th National Convention</h3>
+                    <p>AI & IoT for Social Inclusion</p>
+                    <a href="convention/index.html" class="btn-portal">Enter Convention Portal</a>
+                </div>
+                <div id="dynamic-events" class="events-wrapper-flex"></div>
+            </div>
+        </div>
+    </section>
+
+   <section id="about" class="content-section">
+    <div class="container">
+        <h2 class="section-heading">About IE(I) Kochi Local Centre</h2>
+        
+        <div class="glass-card about-box">
+            <div class="local-centre-info">
+                <p>The Kochi Local Centre is the <strong>second largest centre in India</strong> with 13,032 members. We represent 13 engineering disciplines spanning Ernakulam, Idukki, and Lakshadweep.</p>
+                <ul class="activity-list">
+                    <li>2 technical seminars/webinars monthly on national interest.</li>
+                    <li>Student chapters motivating young engineers.</li>
+                    <li>Coaching classes for AMIE and GATE examinations.</li>
+                    <li>Commitment to UN Sustainable Development Goals.</li>
+                </ul>
             </div>
 
-            <h2 class="section-heading" style="margin-top: 40px;">Featured Events</h2>
-            <div class="event-card">
-                <h3>39th National Convention</h3>
-                <p>Theme: AI & Sustainable Engineering | Nov 2026</p>
-                <a href="convention/index.html" class="btn-neon-trigger">ENTER PORTAL</a>
-            </div>
-        </section>
+            <hr class="section-divider">
 
-        <aside style="grid-column: span 4; display: flex; flex-direction: column; align-items: flex-end;">
-            <a href="https://www.ieindia.org/webui/iei-Memb.aspx" class="btn-membership">
-                JOIN NOW / MEMBERSHIP
-            </a>
-        </aside>
-    </main>
+            <div class="iei-national-info">
+                <h3>The Institution of Engineers (India) [IEI]</h3>
+                <p>The Institution of Engineers (India) is the largest multi-disciplinary professional body of engineers, established in 1920 with its Headquarters located in Kolkata and incorporated under Royal Charter on 9th September, 1935 by the then His Majesty of King George V. The Royal Charter endowed the Institution with the responsibility to promote the general advancement of engineering amongst its members and persons attached to the Institution. After Independence, the Institution is a “Body Corporate” protected under Article 372 of the Constitution of India. The Institution of Engineers (India) is administered by a National Council with the President as its Head.</p>
+                
+                <p>The Institution has been serving the engineering fraternity for over a Century with its national and international presence through 124 Centres spread all over India, 6 Overseas Chapters, 7 Fora and an Organ namely Engineering Staff College of India (ESCI), Hyderabad. The Institution encompasses 15 engineering disciplines with a Corporate membership of over 2 lakhs.</p>
+
+                <div class="highlights-grid">
+                    <p><strong>Research & Recognition:</strong> IEI has been recognized as a Scientific and Industrial Research Organization (SIRO) by the Ministry of Science & Technology, Govt. of India and provides Grant-in-Aid to UG / PG / PhD students.</p>
+                    <p><strong>International Presence:</strong> IEI represents India in several International Bodies, such as the World Mining Congress (WMC), the World Federation of Engineering Organizations (WFEO), the Commonwealth Engineers’ Council (CEC), and the Federation of Engineering Institutions of South and Central Asia (FEISCA).</p>
+                    <p><strong>Professional Standards:</strong> IEI holds the International Professional Engineers (IntPE) Register for India and was the forerunner in setting up national standards which culminated in the formation of the Bureau of Indian Standards (BIS).</p>
+                </div>
+
+                <p>The Institution also conducts Sections A & B Examinations (AMIE), recognized as equivalent to a degree in engineering by the Government of India and the UPSC. Furthermore, IEI maintains a panel of highly qualified Arbitrators to assist in disputes arising during execution of works / supplies contracts.</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="history-section">
+                <h3>History and Genesis</h3>
+                <p>After the First World War, as industrialization rose in India, a need was felt to uphold quality in engineering products and operations. The Government of India formed an Indian Industrial Commission under the Chairmanship of Sir Thomas Holland. The commission recommended the establishment of an Institution as a professional body of engineers to ensure advancement of technology.</p>
+                <p>On the basis of this recommendation, the “Indian Society of Engineers” was formed on 3rd January 1919 at Calcutta. Finally, in a meeting held on 16th July 1919 at Shimla, the name was changed to <strong>The Institution of Engineers (India)</strong>.</p>
+
+                <h4>Historical Milestones</h4>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Milestone Event</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>13 Sep 1920</td><td>Formal registration in Madras under the Indian Companies Act of 1913.</td></tr>
+                        <tr><td>23 Feb 1921</td><td>Inauguration by His Excellency Lord Chelmsford, Viceroy of India.</td></tr>
+                        <tr><td>23 Feb 1921</td><td>Announcement of “The Viceroy’s Prize” and the 1st Technical Paper.</td></tr>
+                        <tr><td>1922</td><td>Publication of the 1st issue of the Journal of the Institution.</td></tr>
+                        <tr><td>Aug 1928</td><td>The 1st Associate Membership examination was held.</td></tr>
+                        <tr><td>09 Sep 1935</td><td>Royal Charter granted at the Court at Buckingham Palace.</td></tr>
+                        <tr><td>21 Oct 1937</td><td>1st Bye-laws approved by the Privy Council, England.</td></tr>
+                        <tr><td>01 Jan 1968</td><td>President Dr Zakir Hossain inaugurated the HQ building in Kolkata.</td></tr>
+                        <tr><td>09 Jan 1987</td><td>1st Indian Engineering Congress inaugurated by PM Shri Rajiv Gandhi.</td></tr>
+                        <tr><td>15 Oct 1993</td><td>1st IEI Convocation held at Ranchi.</td></tr>
+                        <tr><td>22 Jan 2012</td><td>1st IEI-Springer Journal-Series 'C' Published.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+    <section id="committee" class="content-section">
+        <div class="container">
+            <h2 class="section-heading">Organizing Committee</h2>
+            <div id="committee-grid" class="committee-grid">
+                <p>Loading committee members...</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="content-section">
+        <div class="container">
+            <h2 class="section-heading">Gallery</h2>
+            <div id="gallery-grid" class="gallery-grid">
+                </div>
+        </div>
+    </section>
+
+    <section id="contact" class="content-section">
+        <div class="container">
+            <div class="contact-flex">
+                <div class="glass-card contact-info">
+                    <h2>Contact Us</h2>
+                    <p>📍 The Institution of Engineers (India), Kochi Local Centre,
+IEI bhavan,<br>
+Homoeo Hospital Road,<br>
+Near Pullepady Railway Overbridge East Side,<br>
+Near to Government Homoeo Hospital,<br>
+Kathrikadavu, Kaloor, Ernakulam, Kerala 682017</p>
+                    <p>📞+91-9061000115 | 📧 ieikochi@gmail.com/kochilc@ieindia.org  </p>
+                </div>
+                <div id="membership" class="glass-card membership-info">
+                    <h2>Membership</h2>
+                    <p>Join over 2 lakh corporate members worldwide.</p>
+                    <a href="https://www.ieindia.org/webui/IEI-RegistrationForMembApp.aspx" class="btn-membership">Apply for Membership</a>
+                </div>
+            </div>
+        </div>
+    </section>
+     <div class="venue-map" style="border: 2px solid var(--gold); border-radius: 10px; overflow: hidden;">
+    <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.3896587372333!2d76.28652397573024!3d9.984624473307524!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b080d3936696d5b%3A0xc3f58e2354a88f57!2sThe%20Institution%20of%20Engineers%20(India)%2C%20Kochi%20Local%20Centre!5e0!3m2!1sen!2sin!4v1712836500000!5m2!1sen!2sin" 
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
+<footer style="text-align: center; padding: 20px;">
+    <p>© 2026 IE(I) Kochi Local Centre</p>
+    <a href="./admin/dashboard.html" style="color: rgba(255,255,255,0.1); font-size: 12px; text-decoration: none;">Admin Login</a>
+</footer>
+    <script src="js/home.js"></script>
 </body>
 </html>
