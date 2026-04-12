@@ -67,7 +67,15 @@ app.get('/admin', (req, res) => {
 // To this:
 // --- 4. CATCH-ALL FOR SPA ---
 // Using named parameter syntax to satisfy strict Express/path-to-regexp rules
-app.get('/:any*', (req, res) => {
+// --- 4. CATCH-ALL FOR SPA ---
+// This uses a regular expression to match everything. 
+// It's the most compatible way for Express 5.0 / Node 22.
+app.get(/^(?!\/api).+/, (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
+// If the above still causes issues, use the absolute simplest version:
+app.use((req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
