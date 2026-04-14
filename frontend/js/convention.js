@@ -1,14 +1,14 @@
 const conventionTracks = [
-    { title: "Social Inclusion & Equity", icon: "🤝", desc: "" },
-    { title: "Assistive Technologies", icon: "♿", desc: "" },
-    { title: "Smart Wearables", icon: "⌚", desc: "" },
-    { title: "AI Healthcare & Rehab", icon: "🏥", desc: "" },
-    { title: "Inclusive Infrastructure", icon: "🏘️", desc: "" },
-    { title: "Human-Centric AI", icon: "👤", desc: "" },
-    { title: "Advanced Communication", icon: "📡", desc: "" },
-    { title: "Autonomous Public Safety", icon: "🤖", desc: "" },
-    { title: "Underwater Navigation", icon: "🌊", desc: "" },
-    { title: "Naval & Aerospace Security", icon: "🚀", desc: "" }
+    { title: "Social Inclusion & Equity", icon: "🤝", desc: "AI & IoT for bridging socio-economic divides" },
+    { title: "Assistive Technologies", icon: "♿", desc: "Intelligent systems for disability independence" },
+    { title: "Smart Wearables", icon: "⌚", desc: "IoT-enabled mobility and health monitoring" },
+    { title: "AI Healthcare & Rehab", icon: "🏥", desc: "Telemedicine for underserved communities" },
+    { title: "Inclusive Infrastructure", icon: "🏘️", desc: "Safe smart homes and public spaces" },
+    { title: "Human-Centric AI", icon: "👤", desc: "Universal design ensuring user inclusiveness[cite" },
+    { title: "Advanced Communication", icon: "📡", desc: "SDR and Laser networks for resilient connectivity" },
+    { title: "Autonomous Public Safety", icon: "🤖", desc: "Robotics for rescue and safety enhancement" },
+    { title: "Underwater Navigation", icon: "🌊", desc: "AI-enabled systems for maritime and coastal safety" },
+    { title: "Naval & Aerospace Security", icon: "🚀", desc: "Intelligent systems for surveillance and UAVs" }
 ];
 
 function initPortal() {
