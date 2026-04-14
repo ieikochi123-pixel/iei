@@ -96,3 +96,22 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchHomeContent();
     handleNavScroll();
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const slides = document.querySelectorAll('.hero-slide');
+    let currentIndex = 0;
+    const slideInterval = 5000; // Time in milliseconds (5 seconds)
+
+    function nextSlide() {
+        // Remove 'active' from the current slide
+        slides[currentIndex].classList.remove('active');
+        
+        // Calculate index of next slide
+        currentIndex = (currentIndex + 1) % slides.length;
+        
+        // Add 'active' to the next slide
+        slides[currentIndex].classList.add('active');
+    }
+
+    // Start the loop
+    setInterval(nextSlide, slideInterval);
+});
