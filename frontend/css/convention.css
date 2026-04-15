@@ -105,3 +105,25 @@ body.convention-body {
     transform: translateY(-10px);
     border-color: var(--electric-blue);
 }
+
+.theme-badge {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #007BFF, #00C6FF);
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.theme-label {
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.theme-text {
+    font-size: 28px;   /* 🔥 Bigger text */
+    font-weight: 700;
+    letter-spacing: 1px;
+}
