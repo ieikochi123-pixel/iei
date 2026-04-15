@@ -192,3 +192,32 @@ body.convention-body {
     background: var(--accent-orange);
     color: white;
 }
+
+.btn-coffee {
+    background: var(--coffee-brown);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-coffee-outline {
+    border: 2px solid var(--coffee-brown);
+    color: var(--coffee-brown);
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-coffee:hover {
+    background: var(--coffee-dark);
+}
+
+.btn-coffee-outline:hover {
+    background: var(--coffee-brown);
+    color: white;
+}
