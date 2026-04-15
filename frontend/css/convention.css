@@ -37,7 +37,7 @@ body.convention-body {
 
 .nav-links a:hover { color: var(--electric-blue); }
 
-/* Buttons - Orange Accents [cite: 13, 237] */
+/* Buttons - Orange Accents [cite: 13, 237] 
 .cta-nav-orange, .btn-orange {
     background: var(--accent-orange);
     color: white;
@@ -47,6 +47,30 @@ body.convention-body {
     font-weight: bold;
     display: inline-block;
 }
+*/
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  /* 🔥 Important */
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.cta-nav-orange {
+    background-color: #FF8C00;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+
+
+
 
 .btn-outline {
     border: 2px solid var(--electric-blue);
