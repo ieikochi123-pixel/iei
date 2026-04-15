@@ -193,6 +193,22 @@ body.convention-body {
     color: white;
 }
 
+:root {
+    --coffee-brown: #6F4E37;
+    --coffee-dark: #4B2E2B;
+}
+
+/* ✅ Button Container */
+.download-buttons {
+    margin-top: 25px;
+    margin-bottom: 60px;  /* 🔥 prevents overlap */
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ✅ Primary Button */
 .btn-coffee {
     background: var(--coffee-brown);
     color: white;
@@ -203,6 +219,7 @@ body.convention-body {
     transition: 0.3s;
 }
 
+/* ✅ Outline Button */
 .btn-coffee-outline {
     border: 2px solid var(--coffee-brown);
     color: var(--coffee-brown);
@@ -213,6 +230,7 @@ body.convention-body {
     transition: 0.3s;
 }
 
+/* ✅ Hover Effects */
 .btn-coffee:hover {
     background: var(--coffee-dark);
 }
@@ -220,4 +238,21 @@ body.convention-body {
 .btn-coffee-outline:hover {
     background: var(--coffee-brown);
     color: white;
+}
+
+/* ✅ Prevent Section Overlap */
+.authors-section {
+    position: relative;
+    z-index: 1;
+}
+
+/* ✅ Ensure Next Section Spacing */
+.grid-section {
+    margin-top: 40px;
+}
+
+/* ✅ Smooth Hover Lift */
+.btn-coffee:hover,
+.btn-coffee-outline:hover {
+    transform: translateY(-2px);
 }
