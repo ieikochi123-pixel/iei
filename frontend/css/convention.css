@@ -151,3 +151,44 @@ body.convention-body {
     font-weight: 700;
     letter-spacing: 1px;
 }
+
+
+.hero-buttons {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Primary Orange Button */
+.btn-orange {
+    background: var(--accent-orange);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* Secondary Button (Outline Style) */
+.btn-orange-outline {
+    border: 2px solid var(--accent-orange);
+    color: var(--accent-orange);
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* Hover Effects */
+.btn-orange:hover {
+    background: #e67600;
+}
+
+.btn-orange-outline:hover {
+    background: var(--accent-orange);
+    color: white;
+}
