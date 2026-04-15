@@ -301,6 +301,8 @@ section {
 .dates-section {
     padding: 80px 5%;
     text-align: center;
+    background-color: #ffffff;   /* 🔥 White background */
+    color: #000;                 /* 🔥 Text becomes dark */
 }
 
 .dates-table {
@@ -308,25 +310,27 @@ section {
     margin: 30px auto;
     border-collapse: collapse;
     font-size: 16px;
+    background-color: #ffffff;
 }
 
 .dates-table th,
 .dates-table td {
-    border: 2px solid var(--electric-blue);
+    border: 1.5px solid #0B3D91;   /* 🔥 Dark blue border */
     padding: 15px;
     text-align: left;
 }
 
 .dates-table th {
-    background: var(--electric-blue);
+    background: #0B3D91;   /* 🔥 Navy header */
     color: white;
 }
 
 .dates-table tr:nth-child(even) {
-    background: rgba(255, 255, 0, 0.05);
+    background: #f4f6f9;   /* 🔥 Light grey alternate row */
 }
+
 
 /* Highlight Conference Dates */
 .highlight-row {
-    background: rgba(111, 78, 55, 0.2);
+    background: #fbe5d6;   /* 🔥 Soft coffee/light highlight */
 }
