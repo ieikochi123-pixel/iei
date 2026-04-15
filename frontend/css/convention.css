@@ -301,7 +301,7 @@ section {
 .dates-section {
     padding: 80px 5%;
     text-align: center;
-    background-color: #ffffff;   /* 🔥 White background */
+    background-color: #f9f9f9;   /* 🔥 White background */
     color: #000;                 /* 🔥 Text becomes dark */
 }
 
