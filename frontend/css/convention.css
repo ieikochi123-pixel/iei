@@ -380,3 +380,11 @@ section {
     font-size: 14px;
     color: #555;
 }
+.pre-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ccc;
+    margin-bottom: 10px;
+}
