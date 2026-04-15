@@ -209,8 +209,10 @@ body.convention-body {
 }
 
 
-section + section {
-    margin-top: 40px;  /* 🔥 forces gap between sections */
+section {
+    position: relative;
+    padding: 100px 5%; /* Increased padding gives the content more 'air' */
+    overflow: hidden;
 }
 
 
@@ -254,18 +256,43 @@ section {
 }
 
 /* ✅ Prevent Section Overlap */
+/* Update these in css/convention.css */
+
+/* ✅ Updated for Pure Black Background */
+/* ✅ White Background Version */
 .authors-section {
+    padding: 80px 5%;
+    text-align: center;
+    background-color: #ffffff !important; /* Pure White Background */
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     position: relative;
-    z-index: 1;
+    z-index: 5;
 }
 
-/* ✅ Ensure Next Section Spacing */
-.grid-section {
-    margin-top: 40px;
+/* Section Title - Keeping the Blue for branding */
+.authors-section h2 {
+    color: #0B3D91 !important; /* Dark Navy Blue */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
 }
 
-/* ✅ Smooth Hover Lift */
-.btn-coffee:hover,
-.btn-coffee-outline:hover {
-    transform: translateY(-2px);
+/* 🔥 Paragraph Text - Now Dark for visibility on white */
+.authors-section p {
+    color: #333333 !important; /* Dark Gray/Black */
+    max-width: 900px;
+    margin: 20px auto;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* Download Button Container */
+.download-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
 }

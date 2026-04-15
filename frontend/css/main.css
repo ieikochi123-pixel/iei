@@ -117,3 +117,11 @@ body { margin: 0; background-color: var(--navy); color: white; font-family: 'Ope
     align-items: center;
     justify-content: space-between;
 }
+/* This targets the description text in the black section */
+.authors-section p {
+    color: skyblue; /* pure white */
+    opacity: 0.9;   /* makes it slightly softer/more professional */
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
