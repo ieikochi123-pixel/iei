@@ -208,6 +208,19 @@ body.convention-body {
     flex-wrap: wrap;
 }
 
+
+section + section {
+    margin-top: 40px;  /* 🔥 forces gap between sections */
+}
+
+
+section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    position: relative;
+}
+
+
 /* ✅ Primary Button */
 .btn-coffee {
     background: var(--coffee-brown);
