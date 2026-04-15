@@ -389,3 +389,16 @@ section {
     text-align: center;
     letter-spacing: 1px;
 }
+.event-details {
+    font-size: 16px;
+    margin-top: 25px;
+    color: #ddd;
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.event-details strong {
+    color: var(--accent-orange);
+}
