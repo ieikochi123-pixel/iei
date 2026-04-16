@@ -402,3 +402,20 @@ section {
 .event-details strong {
     color: var(--accent-orange);
 }
+.hero-logo-top {
+    display: block;
+    margin: 0 auto 20px auto; /* Centered with 20px gap below it */
+    width: 150px;             /* Professional size */
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.4)); /* Subtle blue glow */
+    transition: transform 0.3s ease;
+}
+
+.hero-logo-top:hover {
+    transform: scale(1.05); /* Slight lift effect when hovered */
+}
+
+/* Ensure the Hero Section doesn't hide behind the sticky nav */
+.hero-section {
+    padding-top: 60px; /* Adjust this to match your header height */
+}
