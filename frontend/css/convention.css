@@ -404,13 +404,11 @@ section {
 }
 .hero-logo-top {
     display: block;
-    margin: 0 auto 20px auto; /* Centered with 20px gap below it */
-    width: 150px;             /* Professional size */
+    margin: 0 auto 15px auto; /* Centers and adds space below */
+    width: 120px;             /* Adjusted size for the header area */
     height: auto;
-    filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.4)); /* Subtle blue glow */
-    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2)); /* Subtle glow to make it pop */
 }
-
 .hero-logo-top:hover {
     transform: scale(1.05); /* Slight lift effect when hovered */
 }
