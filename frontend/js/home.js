@@ -18,6 +18,7 @@ async function fetchHomeContent() {
         const data = await response.json();
 
         // 1. Render Notices (Mapped to: title and file_url)
+      /*
         if (noticeList) {
             noticeList.innerHTML = data.notices && data.notices.length > 0 
                 ? data.notices.map(n => `
@@ -25,6 +26,25 @@ async function fetchHomeContent() {
                         <p>▹ ${n.title} <small style="color:var(--gold); margin-left: 10px;">${n.file_url || ''}</small></p>
                     </div>
                 `).join('')
+                : '<p>No current notices.</p>';
+        }
+        */
+            // 1. Render Notices (Mapped to: title and file_url)
+        if (noticeList) {
+            noticeList.innerHTML = data.notices && data.notices.length > 0 
+                ? data.notices.map(n => {
+                    const isImage = n.file_url && (n.file_url.endsWith('.jpg') || n.file_url.endsWith('.png') || n.file_url.endsWith('.gif'));
+                    return `
+                        <div class="notice-item" style="margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                            <p>▹ ${n.title}</p>
+                            ${isImage 
+                                ? `<img src="${n.file_url}" alt="Notice Image" style="max-width:100%; margin-top:8px;" onerror="this.style.display='none'">`
+                                : n.file_url ? `<a href="${n.file_url}" target="_blank" style="color:var(--gold);">View File</a>` 
+                                : ''
+                            }
+                        </div>
+                    `;
+                }).join('')
                 : '<p>No current notices.</p>';
         }
 
