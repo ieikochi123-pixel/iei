@@ -39,7 +39,7 @@ async function fetchHomeContent() {
                             <p>▹ ${n.title}</p>
                             ${isImage 
                                 ? `<img src="${n.file_url}" alt="Notice Image" style="max-width:100%; margin-top:8px;" onerror="this.style.display='none'">`
-                                : n.file_url ? `<a href="${n.file_url}" target="_blank" style="color:var(--gold);">View File</a>` 
+                                : n.file_url ? `<a href="${n.file_url}" target="_blank" style="color:var(--gold);">Specifics </a>` 
                                 : ''
                             }
                         </div>
