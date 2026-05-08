@@ -171,3 +171,13 @@ body { margin: 0; background-color: var(--navy); color: white; font-family: 'Ope
         grid-template-columns: 1fr; /* 1 per row on mobile */
     }
 }
+.committee-grid h3 {
+    font-weight: 800 !important;
+    font-size: 1.2rem;
+    margin-top: 8px;
+}
+
+.committee-grid p {
+    font-weight: 700 !important;
+    letter-spacing: 1px;
+}
