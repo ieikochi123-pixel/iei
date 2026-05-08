@@ -60,11 +60,11 @@ if (committeeGrid) {
                      onerror="this.src='assets/images/logo.png'">
                 
                 <p style="color: var(--electric); font-weight: bold; margin: 0; text-transform: uppercase; font-size: 0.9rem;">
-                    **${m.designation}**
+                    ${m.designation}
                 </p>
 
                 <h3 style="font-family: Montserrat; margin-top: 5px; font-weight: bold; color: white;">
-                    **${m.name}**
+                    ${m.name}
                 </h3>
             </div>
         `).join('')
