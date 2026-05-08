@@ -125,3 +125,49 @@ body { margin: 0; background-color: var(--navy); color: white; font-family: 'Ope
     font-size: 1.1rem;
     line-height: 1.8;
 }
+/* --- ORGANIZING COMMITTEE GRID --- */
+.committee-grid {
+    display: grid;
+    /* Create a 4-column base */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 25px;
+    margin-top: 30px;
+    align-items: stretch;
+}
+
+/* Row 1: First 2 members span 2 columns each (making a row of 2) */
+.committee-grid .glass-card:nth-child(1),
+.committee-grid .glass-card:nth-child(2) {
+    grid-column: span 2;
+    padding: 40px 30px;
+    background: rgba(255, 255, 255, 0.08); /* Slightly highlight the leadership */
+    border: 1px solid var(--gold);
+}
+
+/* Ensure the images for the top two are slightly larger */
+.committee-grid .glass-card:nth-child(1) img,
+.committee-grid .glass-card:nth-child(2) img {
+    width: 140px !important;
+    height: 140px !important;
+}
+
+/* Row 2 Onwards: Every member after the 2nd one spans only 1 column (making rows of 4) */
+.committee-grid .glass-card:nth-child(n+3) {
+    grid-column: span 1;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 992px) {
+    .committee-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 per row on tablets */
+    }
+    .committee-grid .glass-card:nth-child(n) {
+        grid-column: span 1; /* Reset spans for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .committee-grid {
+        grid-template-columns: 1fr; /* 1 per row on mobile */
+    }
+}

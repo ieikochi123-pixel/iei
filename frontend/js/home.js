@@ -29,20 +29,20 @@ async function fetchHomeContent() {
         }
 
         // 2. Render Committee Grid (Mapped to: name, designation, photo_url)
-        if (committeeGrid) {
-            committeeGrid.innerHTML = data.committee && data.committee.length > 0
-                ? data.committee.map(m => `
-                    <div class="glass-card" style="text-align: center;">
-                        <img src="${m.photo_url || 'assets/images/logo.png'}" 
-                             style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--electric); margin-bottom: 15px; object-fit: cover;"
-                             onerror="this.src='assets/images/logo.png'">
-                        <h3 style="font-family: Montserrat; margin-bottom: 5px;">${m.name}</h3>
-                        <p style="color: var(--electric); font-weight: bold; margin: 0;">${m.designation}</p>
-                    </div>
-                `).join('')
-                : '<p>Updating committee details...</p>';
-        }
-
+        // Render Committee Grid (inside fetchHomeContent function)
+if (committeeGrid) {
+    committeeGrid.innerHTML = data.committee && data.committee.length > 0
+        ? data.committee.map(m => `
+            <div class="glass-card" style="text-align: center;">
+                <img src="${m.photo_url || 'assets/images/logo.png'}" 
+                     style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--electric); margin-bottom: 15px; object-fit: cover;"
+                     onerror="this.src='assets/images/logo.png'">
+                <h3 style="font-family: Montserrat; margin-bottom: 5px;">${m.name}</h3>
+                <p style="color: var(--electric); font-weight: bold; margin: 0;">${m.designation}</p>
+            </div>
+        `).join('')
+        : '<p>Updating committee details...</p>';
+}
         // 3. Render Gallery Grid (Mapped to: image_url)
         if (galleryGrid) {
             galleryGrid.innerHTML = data.gallery && data.gallery.length > 0
