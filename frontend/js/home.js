@@ -50,6 +50,7 @@ async function fetchHomeContent() {
 
         // 2. Render Committee Grid (Mapped to: name, designation, photo_url)
         // Render Committee Grid (inside fetchHomeContent function)
+// Render Committee Grid (Mapped to: name, designation, photo_url)
 if (committeeGrid) {
     committeeGrid.innerHTML = data.committee && data.committee.length > 0
         ? data.committee.map(m => `
@@ -57,8 +58,14 @@ if (committeeGrid) {
                 <img src="${m.photo_url || 'assets/images/logo.png'}" 
                      style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--electric); margin-bottom: 15px; object-fit: cover;"
                      onerror="this.src='assets/images/logo.png'">
-                <h3 style="font-family: Montserrat; margin-bottom: 5px;">${m.name}</h3>
-                <p style="color: var(--electric); font-weight: bold; margin: 0;">${m.designation}</p>
+                
+                <p style="color: var(--electric); font-weight: bold; margin: 0; text-transform: uppercase; font-size: 0.9rem;">
+                    **${m.designation}**
+                </p>
+
+                <h3 style="font-family: Montserrat; margin-top: 5px; font-weight: bold; color: white;">
+                    **${m.name}**
+                </h3>
             </div>
         `).join('')
         : '<p>Updating committee details...</p>';
