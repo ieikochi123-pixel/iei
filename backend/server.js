@@ -129,7 +129,7 @@ app.get("/", (req, res) => {
 /* ===========================
    SPA CATCH ALL
 =========================== */
-app.get("*", (req, res) => {
+app.use((req, res) => {
 
     if (req.path.startsWith("/api")) return;
 
