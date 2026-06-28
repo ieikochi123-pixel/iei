@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEI Kochi - Venue Rates & Booking</title>
+    
+    <style>
+        /* --- General Base Layout --- */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 35px;
+            color: #0c3c60; /* IEI Official Blue */
+        }
+
+        .gold-line {
+            height: 3px;
+            width: 60px;
+            background-color: #f1b434; /* IEI Gold Accent */
+            margin: 10px auto;
+        }
+
+        .booking-workspace {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        /* Left Side: Room Listing Cards (MakeMyTrip Style) */
+        .listings-column {
+            flex: 1.3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .room-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+
+        .room-card:hover {
+            transform: translateY(-2px);
+        }
+
+        /* --- Slider Mechanics Container --- */
+        .image-slider-container {
+            width: 260px;
+            min-width: 260px;
+            height: 220px;
+            position: relative;
+            background-color: #ddd;
+            overflow: hidden;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .slide-img {
+            width: 260px;
+            min-width: 260px;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            user-select: none;
+            z-index: 5;
+        }
+
+        .slider-btn:hover { background: rgba(0, 0, 0, 0.7); }
+        .slider-btn.prev { left: 8px; }
+        .slider-btn.next { right: 8px; }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 5;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .dot.active {
+            background: #fff;
+            width: 12px;
+            border-radius: 4px;
+        }
+
+        /* --- Room Information Details --- */
+        .room-details {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .room-info h3 {
+            margin: 0 0 5px 0;
+            color: #222;
+            font-size: 19px;
+        }
+
+        .rating-badge {
+            color: white;
+            padding: 3px 6px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .rating-badge.member-only { background: #c5221f; }
+        .rating-badge.open-all { background: #0c3c60; }
+
+        .room-meta {
+            font-size: 13px;
+            color: #666;
+            margin: 4px 0;
+        }
+
+        .card-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
+            border-top: 1px dashed #eee;
+            padding-top: 12px;
+        }
+
+        .price-section { display: flex; flex-direction: column; }
+        .price-amount { font-size: 22px; font-weight: bold; color: #0c3c60; }
+        .price-tax { font-size: 12px; color: #777; margin-top: 2px; }
+
+        .select-room-btn {
+            background: #f1b434;
+            color: #0c3c60;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .select-room-btn:hover { background: #e0a324; }
+
+        /* Right Sidepanel Form Container */
+        .panel-column {
+            flex: 1;
+            background: #fff;
+            border-top: 4px solid #f1b434;
+            border-radius: 8px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            position: sticky;
+            top: 20px;
+        }
+
+        .panel-column h3 {
+            margin-top: 0;
+            color: #0c3c60;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 10px;
+        }
+
+        /* Calendar Layout Structure */
+        .calendar-section { margin: 20px 0; }
+        .calendar-header-ctrl { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .month-year-label { font-size: 15px; font-weight: bold; color: #0c3c60; }
+        
+        .cal-nav-btn {
+            background: #0c3c60;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .cal-nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .day-header { font-size: 12px; font-weight: bold; color: #555; padding-bottom: 8px; }
+        
+        .cal-day {
+            padding: 8px 0;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #fff;
+            border: 1px solid #eee;
+            font-weight: bold;
+        }
+
+        .empty-day { background: transparent; border: none; cursor: default; }
+        
+        /* Interactive Calendar Colored States */
+        .cal-day.available { background: #e6f4ea; color: #137333; border-color: #c4eed0; }
+        .cal-day.available:hover { background: #d2ebd9; }
+        
+        /* 🔴 Admin Confirmed */
+        .cal-day.confirmed { background: #fce8e6; color: #c5221f; border-color: #fad2cf; cursor: not-allowed; }
+        
+        /* 🟡 Pending Verification */
+        .cal-day.pending { background: #fef7e0; color: #b06000; border-color: #feebb3; cursor: not-allowed; }
+        
+        /* ⚪ Admin Blocked Out / Grey */
+        .cal-day.blocked { background: #f1f3f4; color: #5f6368; border-color: #dadce0; cursor: not-allowed; }
+        
+        .cal-day.selected { background: #0c3c60 !important; color: #fff !important; border-color: #0c3c60; }
+
+        .form-field { display: flex; flex-direction: column; margin-bottom: 15px; }
+        .form-field label { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #444; }
+        .form-field input, .form-field select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+
+        .submit-booking-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0c3c60;
+            color: white;
+            border: none;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .hidden-field { display: none !important; }
+
+        .date-range-container {
+            display: flex;
+            gap: 10px;
+        }
+        .date-range-container .form-field {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="main-title">
+            <h2>IEI Venue & Space Booking Portal</h2>
+            <div class="gold-line"></div>
+        </div>
+
+        <div class="booking-workspace">
+            
+            <!-- LEFT COLUMN: VENUE LISTINGS -->
+            <div class="listings-column">
+                
+                <!-- 1. Guest Room -->
+                <div class="room-card">
+                    <div class="image-slider-container" id="slider-guest">
+                        <div class="slider-wrapper"></div>
+                        <button type="button" class="slider-btn prev" onclick="moveSlide('slider-guest', -1)">&#10094;</button>
+                        <button type="button" class="slider-btn next" onclick="moveSlide('slider-guest', 1)">&#10095;</button>
+                        <div class="slider-dots"></div>
+                    </div>
+                    <div class="room-details">
+                        <div class="room-info">
+                            <span class="rating-badge member-only">🔒 IEI Members Only</span>
+                            <h3>Premium Guest Room</h3>
+                            <div class="room-meta">📍 Transit Block, 2nd Floor</div>
+                        </div>
+                        <div class="card-footer-row">
+                            <div class="price-section">
+                                <span class="price-amount">₹ 1,000</span>
+                                <span class="price-tax">+ applicable taxes / night</span>
+                            </div>
+                            <button type="button" class="select-room-btn" onclick="selectFacility('guest', true, 'Premium Guest Room')">Select</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Classroom -->
+                <div class="room-card">
+                    <div class="image-slider-container" id="slider-class">
+                        <div class="slider-wrapper"></div>
+                        <button type="button" class="slider-btn prev" onclick="moveSlide('slider-class', -1)">&#10094;</button>
+                        <button type="button" class="slider-btn next" onclick="moveSlide('slider-class', 1)">&#10095;</button>
+                        <div class="slider-dots"></div>
+                    </div>
+                    <div class="room-details">
+                        <div class="room-info">
+                            <span class="rating-badge open-all">🌍 Open for Everyone</span>
+                            <h3>Institutional Classroom</h3>
+                            <div class="room-meta">📍 Main Wing, 1st Floor</div>
+                        </div>
+                        <div class="card-footer-row">
+                            <div class="price-section">
+                                <span class="price-amount">₹ 3,000</span>
+                                <span class="price-tax">+ applicable taxes / day</span>
+                            </div>
+                            <button type="button" class="select-room-btn" onclick="selectFacility('classroom', false, 'Institutional Classroom')">Select</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Conference Hall -->
+                <div class="room-card">
+                    <div class="image-slider-container" id="slider-conf">
+                        <div class="slider-wrapper"></div>
+                        <button type="button" class="slider-btn prev" onclick="moveSlide('slider-conf', -1)">&#10094;</button>
+                        <button type="button" class="slider-btn next" onclick="moveSlide('slider-conf', 1)">&#10095;</button>
+                        <div class="slider-dots"></div>
+                    </div>
+                    <div class="room-details">
+                        <div class="room-info">
+                            <span class="rating-badge open-all">🌍 Open for Everyone</span>
+                            <h3>Conference Hall</h3>
+                            <div class="room-meta">📍 Administrative Block</div>
+                        </div>
+                        <div class="card-footer-row">
+                            <div class="price-section">
+                                <span class="price-amount">₹ 4,000</span>
+                                <span class="price-tax">Base Rate for 4 Hours (Extra Hr: ₹1,000)</span>
+                            </div>
+                            <button type="button" class="select-room-btn" onclick="selectFacility('conference', false, 'Conference Hall')">Select</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Aban Hall -->
+                <div class="room-card">
+                    <div class="image-slider-container" id="slider-aban">
+                        <div class="slider-wrapper"></div>
+                        <button type="button" class="slider-btn prev" onclick="moveSlide('slider-aban', -1)">&#10094;</button>
+                        <button type="button" class="slider-btn next" onclick="moveSlide('slider-aban', 1)">&#10095;</button>
+                        <div class="slider-dots"></div>
+                    </div>
+                    <div class="room-details">
+                        <div class="room-info">
+                            <span class="rating-badge open-all">🌍 Open for Everyone</span>
+                            <h3>Aban Hall Auditorium</h3>
+                            <div class="room-meta">📍 Ground Floor Complex</div>
+                        </div>
+                        <div class="card-footer-row">
+                            <div class="price-section">
+                                <span class="price-amount">₹ 20,000</span>
+                                <span class="price-tax">+ applicable taxes / day</span>
+                            </div>
+                            <button type="button" class="select-room-btn" onclick="selectFacility('aban', false, 'Aban Hall Auditorium')">Select</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: FORM & CONDITIONS PANEL -->
+            <div class="panel-column">
+                <h3>Reservation Setup</h3>
+                <form id="reservation-form" onsubmit="handleFinalSubmit(event)">
+                    <div class="form-field">
+                        <label>Selected Facility</label>
+                        <input type="text" id="target-facility" readonly value="Click 'Select' on the left" style="background: #eee; font-weight: bold; color: #0c3c60;" required/>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Your Full Name</label>
+                        <input type="text" id="user-name" required />
+                    </div>
+
+
+                    <div class="form-field hidden-field" id="membership-wrapper">
+                        <label style="color: #c5221f;">IEI Membership ID (Required)</label>
+                        <input type="text" id="membership-id" placeholder="e.g. AM-123456" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Contact Phone</label>
+                        <input type="tel" id="user-phone" required />
+                    </div>
+
+                    <div class="form-field">
+                         <label>Email Address</label>
+                          <input type="email" id="user-email" required />
+                    </div>
+
+                    <!-- ⏱️ HOURLY DURATION SELECTOR -->
+                    <div class="form-field hidden-field" id="duration-wrapper">
+                        <label id="duration-label">Conference Booking Duration</label>
+                        <select id="booking-duration">
+                            <option value="4">Standard Base Slot (4 Hours) - ₹4,000</option>
+                            <option value="5">5 Hours Slot (+ ₹1,000 extra)</option>
+                            <option value="6">6 Hours Slot (+ ₹2,000 extra)</option>
+                            <option value="7">7 Hours Slot (+ ₹3,000 extra)</option>
+                            <option value="8">Full Day Shift (8 Hours)</option>
+                        </select>
+                    </div>
+
+                    <!-- 📅 SELECTION METRICS FOR GUEST ROOMS ONLY -->
+                    <div class="date-range-container hidden-field" id="guest-date-fields">
+                        <div class="form-field">
+                            <label>Check-In Date</label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="form-field">
+                            <label>Check-Out Date</label>
+                            <input type="date" id="end-date">
+                        </div>
+                    </div>
+
+                    <!-- 🗓️ SELECTION METHOD FOR ONLINE CHANNELS (Infinite Grid) -->
+                    <div class="calendar-section" id="visual-calendar-wrapper">
+                        <div class="calendar-header-ctrl">
+                            <button type="button" class="cal-nav-btn" onclick="navigateMonth(-1)">&#10094;</button>
+                            <div class="month-year-label" id="calendar-month-label">June 2026</div>
+                            <button type="button" class="cal-nav-btn" onclick="navigateMonth(1)">&#10095;</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-days-container">
+                            <div class="day-header">Sun</div><div class="day-header">Mon</div><div class="day-header">Tue</div><div class="day-header">Wed</div><div class="day-header">Thu</div><div class="day-header">Fri</div><div class="day-header">Sat</div>
+                        </div>
+                        <input type="hidden" id="selected-date-value" />
+                    </div>
+
+                    <button type="submit" class="submit-booking-btn">Confirm Reservation Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ROOM_IMAGES = {
+
+    guest: [
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/guest1.jpg",
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/guest2.jpg"
+    ],
+
+    classroom: [
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/classroom1.jpg",
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/classroom2.jpg"
+    ],
+
+    conference: [
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/conference1.jpg",
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/conference2.jpg"
+    ],
+
+    aban: [
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/aban1.jpg",
+        "https://sfzghfxodcoxhquaonyz.supabase.co/storage/v1/object/public/venue-images/aban2.jpg"
+    ]
+
+};
+
+        const sliderStates = { 'slider-guest': 0, 'slider-class': 0, 'slider-conf': 0, 'slider-aban': 0 };
+        
+        const today = new Date();
+        let currentViewingYear = today.getFullYear();
+        let currentViewingMonth = today.getMonth();
+        
+        const baseYear = today.getFullYear();
+        const baseMonth = today.getMonth();
+
+        let currentRoomKey = '';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSliderImages('slider-guest', ROOM_IMAGES.guest);
+            loadSliderImages('slider-class', ROOM_IMAGES.classroom);
+            loadSliderImages('slider-conf', ROOM_IMAGES.conference);
+            loadSliderImages('slider-aban', ROOM_IMAGES.aban);
+            
+            const ISOStringToday = today.toISOString().split('T')[0];
+            document.getElementById('start-date').min = ISOStringToday;
+            document.getElementById('end-date').min = ISOStringToday;
+            
+            setupMockDatabase();
+            buildCalendarInterface(currentViewingYear, currentViewingMonth);
+        });
+
+        function setupMockDatabase() {
+            if(!localStorage.getItem('Master_bookings_sim')) {
+                const sampleBookings = [
+                    { date: "2026-06-15", status: "confirmed", room: "classroom" },
+                    { date: "2026-06-18", status: "pending", room: "classroom" },
+                    { date: "2026-06-22", status: "blocked", room: "classroom" },
+                    { date: "2026-07-04", status: "confirmed", room: "conference" }
+                ];
+                localStorage.setItem('Master_bookings_sim', JSON.stringify(sampleBookings));
+            }
+        }
+
+        function loadSliderImages(sliderId, imageArray) {
+            const container = document.getElementById(sliderId);
+            const wrapper = container.querySelector('.slider-wrapper');
+            const dotsContainer = container.querySelector('.slider-dots');
+            imageArray.forEach((imagePath, index) => {
+                const div = document.createElement('div');
+                div.classList.add('slide-img');
+                div.style.backgroundImage = `url("${imagePath}")`;
+                wrapper.appendChild(div);
+
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function moveSlide(sliderId, direction) {
+            const container = document.getElementById(sliderId);
+            const wrapper = container.querySelector('.slider-wrapper');
+            const slides = container.querySelectorAll('.slide-img');
+            const dots = container.querySelectorAll('.dot');
+            let currentIdx = sliderStates[sliderId] + direction;
+            if (currentIdx >= slides.length) currentIdx = 0;
+            if (currentIdx < 0) currentIdx = slides.length - 1;
+            sliderStates[sliderId] = currentIdx;
+            wrapper.style.transform = `translateX(-${currentIdx * 260}px)`;
+            dots.forEach(d => d.classList.remove('active'));
+            if(dots[currentIdx]) dots[currentIdx].classList.add('active');
+        }
+
+        function selectFacility(roomKey, isMemberOnly, displayName) {
+            currentRoomKey = roomKey;
+            document.getElementById('target-facility').value = displayName;
+            
+            document.getElementById('selected-date-value').value = '';
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+
+            const memberWrapper = document.getElementById('membership-wrapper');
+            if (isMemberOnly) {
+                memberWrapper.classList.remove('hidden-field');
+                document.getElementById('membership-id').setAttribute('required', 'true');
+            } else {
+                memberWrapper.classList.add('hidden-field');
+                document.getElementById('membership-id').removeAttribute('required');
+            }
+
+            const durationWrapper = document.getElementById('duration-wrapper');
+            const bookingDurationSelect = document.getElementById('booking-duration');
+            const guestDatesWrapper = document.getElementById('guest-date-fields');
+            const visualCalendarWrapper = document.getElementById('visual-calendar-wrapper');
+
+            if (roomKey === 'conference') {
+                durationWrapper.classList.remove('hidden-field');
+                bookingDurationSelect.setAttribute('required', 'true');
+            } else {
+                durationWrapper.classList.add('hidden-field');
+                bookingDurationSelect.removeAttribute('required');
+            }
+
+            if (roomKey === 'guest') {
+                guestDatesWrapper.classList.remove('hidden-field');
+                document.getElementById('start-date').setAttribute('required', 'true');
+                document.getElementById('end-date').setAttribute('required', 'true');
+                visualCalendarWrapper.classList.add('hidden-field');
+                document.getElementById('selected-date-value').removeAttribute('required');
+            } else {
+                guestDatesWrapper.classList.add('hidden-field');
+                document.getElementById('start-date').removeAttribute('required');
+                document.getElementById('end-date').removeAttribute('required');
+                visualCalendarWrapper.classList.remove('hidden-field');
+                document.getElementById('selected-date-value').setAttribute('required', 'true');
+            }
+
+            buildCalendarInterface(currentViewingYear, currentViewingMonth);
+        }
+
+        function buildCalendarInterface(year, month) {
+            const container = document.getElementById('calendar-days-container');
+            const headers = container.querySelectorAll('.day-header');
+            container.innerHTML = '';
+            headers.forEach(h => container.appendChild(h));
+
+            const monthLabel = document.getElementById('calendar-month-label');
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            monthLabel.innerText = `${monthNames[month]} ${year}`;
+            
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const database = JSON.parse(localStorage.getItem('Master_bookings_sim')) || [];
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.classList.add('empty-day');
+                container.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= totalDaysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.classList.add('cal-day');
+                dayCell.innerText = day;
+                
+                const currentStringKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayRecord = database.find(item => item.date === currentStringKey && item.room === currentRoomKey);
+
+                if (!currentRoomKey) {
+                    dayCell.style.opacity = '0.4';
+                    dayCell.style.cursor = 'not-allowed';
+                } else if (dayRecord) {
+                    if (dayRecord.status === 'confirmed') {
+                        dayCell.classList.add('confirmed');
+                    } else if (dayRecord.status === 'pending') {
+                        dayCell.classList.add('pending');
+                    } else if (dayRecord.status === 'blocked') {
+                        dayCell.classList.add('blocked');
+                    }
+                } else {
+                    dayCell.classList.add('available');
+                    dayCell.onclick = function() { selectCalendarDate(dayCell, currentStringKey); };
+                }
+                container.appendChild(dayCell);
+            }
+        }
+
+        function navigateMonth(direction) {
+            let targetM = currentViewingMonth + direction;
+            let targetY = currentViewingYear;
+
+            if (targetM > 11) {
+                targetM = 0;
+                targetY++;
+            } else if (targetM < 0) {
+                targetM = 11;
+                targetY--;
+            }
+
+            const structuralMonthsDelta = (targetY - baseYear) * 12 + (targetM - baseMonth);
+
+            if (structuralMonthsDelta < 0 || structuralMonthsDelta > 24) {
+                return;
+            }
+
+            currentViewingMonth = targetM;
+            currentViewingYear = targetY;
+            
+            document.getElementById('selected-date-value').value = '';
+            buildCalendarInterface(currentViewingYear, currentViewingMonth);
+        }
+
+        function selectCalendarDate(element, absoluteISOString) {
+            document.querySelectorAll('.cal-day').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('selected-date-value').value = absoluteISOString;
+        }
+
+        async function handleFinalSubmit(event) {
+            event.preventDefault();
+
+            if (!currentRoomKey) {
+                alert("Please select a facility card on the left side first!");
+                return;
+            }
+
+            let displayDetails = "";
+            let finalTargetDate = null;
+            let startDate = null;
+            let endDate = null;
+            let duration = null;
+
+            if (currentRoomKey === 'guest') {
+                startDate = document.getElementById('start-date').value;
+                endDate = document.getElementById('end-date').value;
+
+                if (!startDate || !endDate) {
+                    alert("Guest room validation failed: Both Check-In and Check-Out dates are strictly mandatory!");
+                    return;
+                }
+                if (new Date(startDate) >= new Date(endDate)) {
+                    alert("Invalid Date Selection: Check-Out date must be after the Check-In date!");
+                    return;
+                }
+                displayDetails = `Stay Duration: From ${startDate} to ${endDate}`;
+            } else {
+                finalTargetDate = document.getElementById('selected-date-value').value;
+
+                if (!finalTargetDate) {
+                    alert("Please click and select a green date box on the visual calendar grid!");
+                    return;
+                }
+
+                displayDetails = `Target Date: ${finalTargetDate}`;
+
+                if (currentRoomKey === 'conference') {
+                    duration = document.getElementById('booking-duration').value;
+                    displayDetails += ` (${duration} Hours Selected)`;
+                }
+            }
+
+            const bookingData = {
+                booking_ref: "IEI-" + Date.now(),
+                facility: document.getElementById('target-facility').value,
+                name: document.getElementById('user-name').value,
+                email: document.getElementById('user-email').value,
+                phone: document.getElementById('user-phone').value,
+                membership_id: document.getElementById('membership-id').value,
+                booking_date: finalTargetDate,
+                start_date: startDate,
+                end_date: endDate,
+                duration: duration,
+                status: "Pending"
+            };
+
+            if (currentRoomKey !== 'guest') {
+                let localSyncDb = JSON.parse(localStorage.getItem('Master_bookings_sim')) || [];
+                localSyncDb.push({ date: finalTargetDate, status: "pending", room: currentRoomKey });
+                localStorage.setItem('Master_bookings_sim', JSON.stringify(localSyncDb));
+            }
+
+            try {
+                const response = await fetch("/api/bookings",  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    alert(result.message);
+                    return;
+                }
+            } catch (error) {
+                console.warn("Server connection placeholder context log.");
+            }
+
+            alert(`Reservation Request Processed Successfully!\n\nFacility: ${bookingData.facility}\n${displayDetails}\n\nReference: ${bookingData.booking_ref}`);
+            
+            document.getElementById("reservation-form").reset();
+            selectFacility(currentRoomKey, currentRoomKey === 'guest', document.getElementById('target-facility').value);
+        }
+
+        // Available for administrative maintenance via devtools context safely
+        function clearDemoMemory() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+    <footer style="text-align:center; margin-top:40px; padding:20px;">
+
+    <a href="admin-login.html"
+       style="
+       font-size:12px;
+       color:#999;
+       text-decoration:none;">
+       Admin Access
+    </a>
+
+</footer>
+
+</body>
+</html>

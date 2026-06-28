@@ -1,32 +1,53 @@
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-require('dotenv').config();
-const supabase = require('./config/supabase.js'); 
+require("dotenv").config();
+
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+
+const supabase = require("./config/supabase");
+const bookingRoutes = require("./routes/bookings");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// --- CRITICAL PATH LOGIC ---
-// This tells Express to look one folder UP and then into 'frontend'
-const frontendPath = path.resolve(__dirname, '../frontend');
+/* ===========================
+   BOOKING SYSTEM API
+=========================== */
+app.use("/api/bookings", bookingRoutes);
+
+/* ===========================
+   FRONTEND FILES
+=========================== */
+const frontendPath = path.resolve(__dirname, "../frontend");
 app.use(express.static(frontendPath));
 
-// --- 1. HOME CONTENT ENGINE ---
-app.get('/api/home-content', async (req, res) => {
+/* ===========================
+   HOME CONTENT API
+=========================== */
+app.get("/api/home-content", async (req, res) => {
     try {
-        console.log("📡 Fetching Home Content...");
-        const [notices, events, committee, gallery] = await Promise.all([
-            supabase.from('notices').select('*'),
-            supabase.from('events').select('*'),
-            supabase.from('committee').select('*'),
-            supabase.from('gallery').select('*')
-        ]);
 
-        if (notices.error || events.error || committee.error || gallery.error) {
-            console.error("❌ Supabase Error:", notices.error || events.error);
-            return res.status(500).json({ error: "Database fetch failed" });
+        console.log("📡 Fetching Home Content...");
+
+        const [notices, events, committee, gallery] =
+            await Promise.all([
+                supabase.from("notices").select("*"),
+                supabase.from("events").select("*"),
+                supabase.from("committee").select("*"),
+                supabase.from("gallery").select("*")
+            ]);
+
+        if (
+            notices.error ||
+            events.error ||
+            committee.error ||
+            gallery.error
+        ) {
+            return res.status(500).json({
+                error: "Database fetch failed"
+            });
         }
 
         res.json({
@@ -35,51 +56,94 @@ app.get('/api/home-content', async (req, res) => {
             committee: committee.data,
             gallery: gallery.data
         });
-        console.log("✅ Data sent to frontend.");
+
     } catch (err) {
-        console.error("🔥 Crash:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+
+        console.error(err);
+
+        res.status(500).json({
+            error: "Internal Server Error"
+        });
+
     }
 });
 
-// --- 2. ADMIN POST ROUTE ---
-app.post('/api/admin/add/:table', async (req, res) => {
+/* ===========================
+   ADMIN ADD CONTENT API
+=========================== */
+app.post("/api/admin/add/:table", async (req, res) => {
+
     const { table } = req.params;
+
     try {
-        const { data, error } = await supabase.from(table).insert([req.body]);
+
+        const { data, error } =
+            await supabase
+                .from(table)
+                .insert([req.body]);
+
         if (error) throw error;
-        res.status(200).json({ message: "Success", data });
+
+        res.status(200).json({
+            success: true,
+            data
+        });
+
     } catch (err) {
-        res.status(400).json({ error: err.message });
+
+        res.status(400).json({
+            success: false,
+            error: err.message
+        });
+
     }
+
 });
 
-// --- 3. ADMIN PANEL ROUTING ---
-// Updated to find dashboard.html inside frontend/admin
-app.get('/admin', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'admin/dashboard.html'));
+/* ===========================
+   ADMIN DASHBOARD
+=========================== */
+app.get("/admin", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            frontendPath,
+            "admin",
+            "dashboard.html"
+        )
+    );
+
 });
 
-// --- 4. CATCH-ALL FOR SPA ---
-// This ensures that refreshing the page doesn't show an error
-// --- 4. CATCH-ALL FOR SPA ---
-// Change this: app.get('*', ...
-// To this:
-// --- 4. CATCH-ALL FOR SPA ---
-// Using named parameter syntax to satisfy strict Express/path-to-regexp rules
-// --- 4. CATCH-ALL FOR SPA ---
-// This uses a regular expression to match everything. 
-// It's the most compatible way for Express 5.0 / Node 22.
+/* ===========================
+   HOME PAGE
+=========================== */
+app.get("/", (req, res) => {
+
+    res.sendFile(
+        path.join(frontendPath, "index.html")
+    );
+
+});
+
+/* ===========================
+   SPA CATCH ALL
+=========================== */
 app.get(/^(?!\/api).+/, (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
+
+    res.sendFile(
+        path.join(frontendPath, "index.html")
+    );
+
 });
 
-// If the above still causes issues, use the absolute simplest version:
-app.use((req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-});
-
+/* ===========================
+   START SERVER
+=========================== */
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server is live on port ${PORT}`);
+
+app.listen(PORT, () => {
+
+    console.log(`🚀 Server running on port ${PORT}`);
+
 });
