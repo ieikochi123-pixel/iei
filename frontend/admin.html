@@ -268,7 +268,7 @@ async function loadBookings() {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/api/bookings"
+            "/api/bookings"
         );
 
         const bookings = await response.json();
@@ -403,7 +403,7 @@ async function updateStatus(id, status) {
     try {
 
         const response = await fetch(
-            `http://localhost:5000/api/bookings/${id}`,
+            `/api/bookings/${id}`,
             {
                 method: "PUT",
                 headers: {

@@ -129,7 +129,9 @@ app.get("/", (req, res) => {
 /* ===========================
    SPA CATCH ALL
 =========================== */
-app.get(/^(?!\/api).+/, (req, res) => {
+app.get("*", (req, res) => {
+
+    if (req.path.startsWith("/api")) return;
 
     res.sendFile(
         path.join(frontendPath, "index.html")
