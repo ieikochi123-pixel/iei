@@ -64,6 +64,10 @@ router.post("/", async (req, res) => {
         try {
 
             await sendAdminNotification(booking);
+            res.status(200).json({
+           success: true,
+           message: "Booking submitted successfully. Email sent to administrator."
+        });
 
             console.log("Admin Email Sent Successfully");
 

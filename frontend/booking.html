@@ -327,7 +327,7 @@
                         <div class="room-info">
                             <span class="rating-badge member-only">🔒 IEI Members Only</span>
                             <h3>Premium Guest Room</h3>
-                            <div class="room-meta">📍 Transit Block, 2nd Floor</div>
+                            <div class="room-meta"></div>
                         </div>
                         <div class="card-footer-row">
                             <div class="price-section">
@@ -351,7 +351,7 @@
                         <div class="room-info">
                             <span class="rating-badge open-all">🌍 Open for Everyone</span>
                             <h3>Institutional Classroom</h3>
-                            <div class="room-meta">📍 Main Wing, 1st Floor</div>
+                            <div class="room-meta"></div>
                         </div>
                         <div class="card-footer-row">
                             <div class="price-section">
@@ -375,7 +375,7 @@
                         <div class="room-info">
                             <span class="rating-badge open-all">🌍 Open for Everyone</span>
                             <h3>Conference Hall</h3>
-                            <div class="room-meta">📍 Administrative Block</div>
+                            <div class="room-meta">📍Ground Floor</div>
                         </div>
                         <div class="card-footer-row">
                             <div class="price-section">
@@ -399,7 +399,7 @@
                         <div class="room-info">
                             <span class="rating-badge open-all">🌍 Open for Everyone</span>
                             <h3>Aban Hall Auditorium</h3>
-                            <div class="room-meta">📍 Ground Floor Complex</div>
+                            <div class="room-meta">📍 1st Floor</div>
                         </div>
                         <div class="card-footer-row">
                             <div class="price-section">
@@ -769,13 +769,20 @@
             }
 
             try {
-                const response = await fetch("/api/bookings",  {
+                const response = await fetch("/api/bookings",{
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(bookingData)
                 });
-
-                const result = await response.json();
+            
+        
+               const result = await response.json();
+               if (result.success) {
+              alert("✅ Booking submitted successfully!\nEmail sent to administrator.");
+              } else {
+             alert(result.message);
+                  return;
+                 }
                 if (!result.success) {
                     alert(result.message);
                     return;
