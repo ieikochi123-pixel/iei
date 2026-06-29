@@ -35,14 +35,14 @@ router.post("/", async (req, res) => {
             if (checkError) {
                 return res.status(400).json({
                     success: false,
-                    message: checkError.message
+                    message:"Not Available"
                 });
             }
 
             if (existingBooking.length > 0) {
                 return res.status(400).json({
-                    success: false,
-                    message: "This facility is already booked for that date."
+                    success: true,
+                    message: "Booking on review.Iei kochi will contact you soon"
                 });
             }
         }
