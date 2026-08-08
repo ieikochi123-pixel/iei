@@ -1,0 +1,50 @@
+export const TOTAL_ROOMS = 6
+
+export const FACILITIES = [
+  {
+    key: 'guest',
+    name: 'Premium Guest Room',
+    displayName: 'Premium Guest Room',
+    price: '\u20b9 1,000',
+    unit: '+ applicable taxes / night',
+    note: 'Only for IEI members. Requires a check-in and check-out date.',
+    dateMode: 'range',
+    membershipRequired: true,
+  },
+  {
+    key: 'class',
+    name: 'Institutional Classroom',
+    displayName: 'Institutional Classroom',
+    price: '\u20b9 3,000',
+    unit: '+ applicable taxes / day',
+    note: 'Single-day booking.',
+    dateMode: 'single',
+    membershipRequired: false,
+  },
+  {
+    key: 'conf',
+    name: 'Conference Hall',
+    displayName: 'Conference Hall',
+    price: '\u20b9 4,000',
+    unit: 'Base rate for 4 hours (extra hr: \u20b91,000)',
+    note: 'Single-day booking with selectable duration.',
+    dateMode: 'single',
+    membershipRequired: false,
+    durationOptions: [
+      { value: '4', label: 'Standard Base Slot (4 Hours) \u2013 \u20b94,000' },
+      { value: '5', label: '5 Hours Slot (+ \u20b91,000 extra)' },
+      { value: '6', label: '6 Hours Slot (+ \u20b92,000 extra)' },
+      { value: '7', label: '7 Hours Slot (+ \u20b93,000 extra)' },
+    ],
+  },
+  {
+    key: 'aban',
+    name: 'Aban Hall Auditorium',
+    displayName: 'Aban Hall Auditorium',
+    price: '\u20b9 20,000',
+    unit: '+ applicable taxes / day',
+    note: 'Single-day booking.',
+    dateMode: 'single',
+    membershipRequired: false,
+  },
+]
