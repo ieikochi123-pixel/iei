@@ -4,6 +4,7 @@ import { FACILITIES, TOTAL_ROOMS } from '../data/facilities'
 import { checkAvailability, generateBookingRef } from '../lib/bookingLogic'
 import SectionHeading from '../components/SectionHeading'
 import RoomCard from '../components/RoomCard'
+import BookingCalendar from '../components/BookingCalendar'
 
 const initialForm = {
   name: '',
@@ -100,7 +101,7 @@ export default function Booking() {
 
         <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8 items-start">
           {/* Facility listing */}
-          <div className="grid sm:grid-cols-2 gap-5">
+          <div className="flex flex-col gap-5">
             {FACILITIES.map((f) => (
               <RoomCard key={f.key} facility={f} selected={f.key === selectedKey} onSelect={selectFacility} />
             ))}
@@ -191,14 +192,12 @@ export default function Booking() {
               {facility.dateMode === 'single' && (
                 <div>
                   <label className="block text-xs font-mono uppercase tracking-wide text-[var(--color-ink-soft)] mb-1">
-                    Booking Date
+                    Select Date
                   </label>
-                  <input
-                    required
-                    type="date"
+                  <BookingCalendar
+                    facilityDisplayName={facility.displayName}
                     value={form.bookingDate}
-                    onChange={(e) => updateField('bookingDate', e.target.value)}
-                    className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 focus-ring"
+                    onChange={(date) => updateField('bookingDate', date)}
                   />
                 </div>
               )}
