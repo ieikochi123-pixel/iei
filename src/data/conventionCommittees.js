@@ -60,7 +60,7 @@ export const internationalTechnicalCommittee = [
   { name: 'Dr. Ammu George', detail: 'Researcher, Queen\'s Business School, Queen\'s University Belfast', location: 'United Kingdom' },
   { name: 'Dr. Rangith Baby Kuriakose', detail: 'Faculty, Central University of Technology, Free State', location: 'South Africa' },
   { name: 'Dr. Sarath Sreedharan', detail: 'Faculty/Researcher, Colorado State University', location: 'USA' },
-  { name: 'Dr. Umesh Neettiyath', detail: 'Senior Researcher, The University of Tokyo', location: 'USA' },
+  { name: 'Dr. Umesh Neettiyath', detail: 'Senior Researcher, The University of Tokyo', location: 'Japan' },
   { name: 'Dr. Arun Ashok', detail: 'Senior Scientific Staff, Juelich Research Center', location: 'Germany' },
   { name: 'Vineeth Gopalakrishnan Nair', detail: 'Software Development Engineer, Amazon Robotics', location: 'USA' },
   { name: 'Vijitha Sasidharan Menon', detail: 'Principal Software Engineer, Samsung Healthcare', location: 'USA' },
