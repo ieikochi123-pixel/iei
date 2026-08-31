@@ -1,0 +1,60 @@
+const BOOKING_STORAGE_BASE = `${import.meta.env.VITE_BOOKING_SUPABASE_URL}/storage/v1/object/public/venue-images`
+
+export const TOTAL_ROOMS = 6
+
+export const FACILITIES = [
+  {
+    key: 'guest',
+    name: 'Premium Guest Room',
+    displayName: 'Premium Guest Room',
+    location: 'Transit Block, 2nd Floor',
+    price: '₹ 1,000',
+    unit: '+ applicable taxes / night',
+    note: 'Only for IEI members. Requires a check-in and check-out date.',
+    dateMode: 'range',
+    membershipRequired: true,
+    images: [`${BOOKING_STORAGE_BASE}/guest1.jpg`, `${BOOKING_STORAGE_BASE}/guest2.jpg`],
+  },
+  {
+    key: 'class',
+    name: 'Institutional Classroom',
+    displayName: 'Institutional Classroom',
+    location: 'Main Wing, 1st Floor',
+    price: '₹ 3,000',
+    unit: '+ applicable taxes / day',
+    note: 'Single-day booking.',
+    dateMode: 'single',
+    membershipRequired: false,
+    images: [`${BOOKING_STORAGE_BASE}/classroom1.jpg`, `${BOOKING_STORAGE_BASE}/classroom2.jpg`],
+  },
+  {
+    key: 'conf',
+    name: 'Conference Hall',
+    displayName: 'Conference Hall',
+    location: 'Administrative Block',
+    price: '₹ 4,000',
+    unit: 'Base rate for 4 hours (extra hr: ₹1,000)',
+    note: 'Single-day booking with selectable duration.',
+    dateMode: 'single',
+    membershipRequired: false,
+    durationOptions: [
+      { value: '4', label: 'Standard Base Slot (4 Hours) – ₹4,000' },
+      { value: '5', label: '5 Hours Slot (+ ₹1,000 extra)' },
+      { value: '6', label: '6 Hours Slot (+ ₹2,000 extra)' },
+      { value: '7', label: '7 Hours Slot (+ ₹3,000 extra)' },
+    ],
+    images: [`${BOOKING_STORAGE_BASE}/conference1.jpg`, `${BOOKING_STORAGE_BASE}/conference2.jpg`],
+  },
+  {
+    key: 'aban',
+    name: 'Aban Hall Auditorium',
+    displayName: 'Aban Hall Auditorium',
+    location: 'Ground Floor Complex',
+    price: '₹ 20,000',
+    unit: '+ applicable taxes / day',
+    note: 'Single-day booking.',
+    dateMode: 'single',
+    membershipRequired: false,
+    images: [`${BOOKING_STORAGE_BASE}/aban1.jpg`, `${BOOKING_STORAGE_BASE}/aban2.jpg`],
+  },
+]
