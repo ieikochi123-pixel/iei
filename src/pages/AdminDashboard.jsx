@@ -10,10 +10,16 @@ const STATUS_STYLES = {
   Cancelled: 'bg-gray-200 text-gray-700',
 }
 
+// Public Supabase Storage bucket (on the content project) that holds
+// uploaded notice/committee/gallery images. Create this bucket once in the
+// Supabase dashboard -> Storage -> New bucket -> name it exactly this,
+// and mark it "Public".
+const STORAGE_BUCKET = 'site-images'
+
 const CONTENT_TABLES = {
   notices: [
     { name: 'title', label: 'Title' },
-    { name: 'file_url', label: 'File / Image URL' },
+    { name: 'file_url', label: 'File / Image', upload: true },
   ],
   events: [
     { name: 'title', label: 'Title' },
@@ -22,10 +28,10 @@ const CONTENT_TABLES = {
   committee: [
     { name: 'name', label: 'Name' },
     { name: 'designation', label: 'Designation' },
-    { name: 'photo_url', label: 'Photo URL' },
+    { name: 'photo_url', label: 'Photo', upload: true },
   ],
   gallery: [
-    { name: 'image_url', label: 'Image URL' },
+    { name: 'image_url', label: 'Image', upload: true },
   ],
 }
 
@@ -38,6 +44,82 @@ function StatCard({ label, value }) {
   )
 }
 
+function ImageUploadField({ table, field, value, onChange }) {
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleFile(e) {
+    const file = e.target.files?.[0]
+    e.target.value = '' // allow re-selecting the same file later
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please choose an image file.')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image is larger than 5MB.')
+      return
+    }
+
+    setUploading(true)
+    setError('')
+
+    const ext = file.name.split('.').pop()
+    const path = `${table}/${crypto.randomUUID()}.${ext}`
+
+    const { error: uploadError } = await supabase.storage.from(STORAGE_BUCKET).upload(path, file, {
+      cacheControl: '3600',
+      upsert: false,
+    })
+
+    if (uploadError) {
+      setUploading(false)
+      setError(uploadError.message)
+      return
+    }
+
+    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path)
+    onChange(data.publicUrl)
+    setUploading(false)
+  }
+
+  return (
+    <div>
+      <label className="block text-xs font-mono uppercase tracking-wide text-[var(--color-ink-soft)] mb-1">
+        {field.label}
+      </label>
+
+      {value && (
+        <img
+          src={value}
+          alt=""
+          className="w-full h-28 object-cover rounded border border-[var(--color-paper-line)] mb-2"
+        />
+      )}
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFile}
+        disabled={uploading}
+        className="w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:bg-[var(--color-navy)] file:text-white file:text-xs file:font-semibold hover:file:bg-[var(--color-navy-soft)] disabled:opacity-60"
+      />
+
+      {uploading && <p className="text-xs text-[var(--color-ink-soft)] mt-1">{'Uploading\u2026'}</p>}
+      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+
+      <input
+        type="url"
+        placeholder="or paste an image URL"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 text-xs mt-2 focus-ring"
+      />
+    </div>
+  )
+}
+
 function ContentForm({ table, fields, onAdded }) {
   const [values, setValues] = useState(() => Object.fromEntries(fields.map((f) => [f.name, ''])))
   const [busy, setBusy] = useState(false)
@@ -45,6 +127,11 @@ function ContentForm({ table, fields, onAdded }) {
 
   async function submit(e) {
     e.preventDefault()
+    const missing = fields.find((f) => !values[f.name])
+    if (missing) {
+      setMsg(`${missing.label} is required.`)
+      return
+    }
     setBusy(true)
     setMsg('')
     const { error } = await supabase.from(table).insert([values])
@@ -61,16 +148,26 @@ function ContentForm({ table, fields, onAdded }) {
   return (
     <form onSubmit={submit} className="bg-white rounded-md border border-[var(--color-paper-line)] p-5 space-y-3">
       <h4 className="font-mono text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">{table}</h4>
-      {fields.map((f) => (
-        <input
-          key={f.name}
-          required
-          placeholder={f.label}
-          value={values[f.name]}
-          onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-          className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 text-sm focus-ring"
-        />
-      ))}
+      {fields.map((f) =>
+        f.upload ? (
+          <ImageUploadField
+            key={f.name}
+            table={table}
+            field={f}
+            value={values[f.name]}
+            onChange={(url) => setValues((v) => ({ ...v, [f.name]: url }))}
+          />
+        ) : (
+          <input
+            key={f.name}
+            required
+            placeholder={f.label}
+            value={values[f.name]}
+            onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+            className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 text-sm focus-ring"
+          />
+        )
+      )}
       <button
         type="submit"
         disabled={busy}
