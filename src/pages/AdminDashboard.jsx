@@ -11,27 +11,32 @@ const STATUS_STYLES = {
 }
 
 // Public Supabase Storage bucket (on the content project) that holds
-// uploaded notice/committee/gallery images. Create this bucket once in the
-// Supabase dashboard -> Storage -> New bucket -> name it exactly this,
+// uploaded notice/committee/gallery/event images. Create this bucket once in
+// the Supabase dashboard -> Storage -> New bucket -> name it exactly this,
 // and mark it "Public".
 const STORAGE_BUCKET = 'site-images'
 
 const CONTENT_TABLES = {
   notices: [
     { name: 'title', label: 'Title' },
-    { name: 'file_url', label: 'File / Image', upload: true },
+    { name: 'file_url', label: 'File / Image', upload: true, optional: true },
+    { name: 'display_order', label: 'Display Order', type: 'number', optional: true },
   ],
   events: [
     { name: 'title', label: 'Title' },
     { name: 'venue', label: 'Venue' },
+    { name: 'image_url', label: 'Event Photo', upload: true, optional: true },
+    { name: 'display_order', label: 'Display Order', type: 'number', optional: true },
   ],
   committee: [
     { name: 'name', label: 'Name' },
     { name: 'designation', label: 'Designation' },
     { name: 'photo_url', label: 'Photo', upload: true },
+    { name: 'display_order', label: 'Display Order', type: 'number', optional: true },
   ],
   gallery: [
     { name: 'image_url', label: 'Image', upload: true },
+    { name: 'display_order', label: 'Display Order', type: 'number', optional: true },
   ],
 }
 
@@ -112,10 +117,263 @@ function ImageUploadField({ table, field, value, onChange }) {
       <input
         type="url"
         placeholder="or paste an image URL"
-        value={value}
+        value={value ?? ''}
         onChange={(e) => onChange(e.target.value)}
         className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 text-xs mt-2 focus-ring"
       />
+    </div>
+  )
+}
+
+function EditableField({ table, field, value, onChange }) {
+  if (field.upload) {
+    return <ImageUploadField table={table} field={field} value={value ?? ''} onChange={onChange} />
+  }
+  if (field.type === 'number') {
+    return (
+      <input
+        type="number"
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 text-sm focus-ring"
+      />
+    )
+  }
+  return (
+    <input
+      type="text"
+      value={value ?? ''}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full border border-[var(--color-paper-line)] rounded px-3 py-2 text-sm focus-ring"
+    />
+  )
+}
+
+function buildPayload(fields, values) {
+  const payload = {}
+  fields.forEach((f) => {
+    if (f.type === 'number') {
+      payload[f.name] = values[f.name] === '' || values[f.name] == null ? null : Number(values[f.name])
+    } else {
+      payload[f.name] = values[f.name] || null
+    }
+  })
+  return payload
+}
+
+// Lists every row in a content table with full inline edit, delete, and
+// display-order reordering (up/down swaps display_order with the neighbour).
+function ManageList({ table, fields, refreshKey, onChanged }) {
+  const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [editValues, setEditValues] = useState({})
+  const [savingId, setSavingId] = useState(null)
+
+  async function load() {
+    setLoading(true)
+    const { data, error } = await supabase
+      .from(table)
+      .select('*')
+      .order('display_order', { ascending: true, nullsFirst: false })
+      .order('id', { ascending: true })
+    if (error) setError(error.message)
+    else {
+      setError('')
+      setRows(data ?? [])
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table, refreshKey])
+
+  function startEdit(row) {
+    setEditingId(row.id)
+    const vals = {}
+    fields.forEach((f) => {
+      vals[f.name] = row[f.name] ?? ''
+    })
+    setEditValues(vals)
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+    setEditValues({})
+  }
+
+  async function saveEdit(id) {
+    setSavingId(id)
+    const payload = buildPayload(fields, editValues)
+    const { error } = await supabase.from(table).update(payload).eq('id', id)
+    setSavingId(null)
+    if (error) {
+      setError(error.message)
+      return
+    }
+    setEditingId(null)
+    setEditValues({})
+    load()
+    onChanged?.()
+  }
+
+  async function deleteRow(id) {
+    if (!window.confirm('Delete this entry permanently?')) return
+    const { error } = await supabase.from(table).delete().eq('id', id)
+    if (error) return setError(error.message)
+    load()
+    onChanged?.()
+  }
+
+  async function move(row, direction) {
+    const idx = rows.findIndex((r) => r.id === row.id)
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1
+    if (swapIdx < 0 || swapIdx >= rows.length) return
+    const other = rows[swapIdx]
+    const a = row.display_order ?? idx
+    const b = other.display_order ?? swapIdx
+    setError('')
+    const [r1, r2] = await Promise.all([
+      supabase.from(table).update({ display_order: b }).eq('id', row.id),
+      supabase.from(table).update({ display_order: a }).eq('id', other.id),
+    ])
+    if (r1.error || r2.error) {
+      setError(r1.error?.message || r2.error?.message)
+      return
+    }
+    load()
+    onChanged?.()
+  }
+
+  return (
+    <div className="bg-white rounded-md border border-[var(--color-paper-line)] p-5 mb-4">
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="font-mono text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
+          {table} ({rows.length})
+        </h4>
+        <button type="button" onClick={load} className="text-xs font-semibold text-[var(--color-navy)] hover:underline">
+          Refresh
+        </button>
+      </div>
+
+      {error && <p className="text-xs text-red-600 mb-2">{error}</p>}
+      {loading && <p className="text-xs text-[var(--color-ink-soft)]">Loading&hellip;</p>}
+      {!loading && rows.length === 0 && (
+        <p className="text-xs text-[var(--color-ink-soft)]">No entries yet.</p>
+      )}
+
+      <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+        {!loading &&
+          rows.map((row, idx) => {
+            const isEditing = editingId === row.id
+            return (
+              <div key={row.id} className="border border-[var(--color-paper-line)] rounded p-3">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <span className="text-xs font-mono text-[var(--color-ink-soft)]">
+                    #{row.id} &middot; order: {row.display_order ?? '\u2014'}
+                  </span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => move(row, 'up')}
+                      disabled={idx === 0}
+                      className="text-xs px-2 py-1 border border-[var(--color-paper-line)] rounded disabled:opacity-30"
+                      title="Move up"
+                    >
+                      &uarr;
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => move(row, 'down')}
+                      disabled={idx === rows.length - 1}
+                      className="text-xs px-2 py-1 border border-[var(--color-paper-line)] rounded disabled:opacity-30"
+                      title="Move down"
+                    >
+                      &darr;
+                    </button>
+                  </div>
+                </div>
+
+                {isEditing ? (
+                  <div className="space-y-2">
+                    {fields.map((f) => (
+                      <div key={f.name}>
+                        <label className="block text-[10px] font-mono uppercase tracking-wide text-[var(--color-ink-soft)] mb-1">
+                          {f.label}
+                        </label>
+                        <EditableField
+                          table={table}
+                          field={f}
+                          value={editValues[f.name]}
+                          onChange={(val) => setEditValues((v) => ({ ...v, [f.name]: val }))}
+                        />
+                      </div>
+                    ))}
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => saveEdit(row.id)}
+                        disabled={savingId === row.id}
+                        className="bg-[var(--color-navy)] text-white text-xs font-semibold px-3 py-1.5 rounded disabled:opacity-60"
+                      >
+                        {savingId === row.id ? 'Saving\u2026' : 'Save'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEdit}
+                        className="text-xs font-semibold px-3 py-1.5 rounded border border-[var(--color-paper-line)]"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="grid gap-1.5 text-sm mb-2">
+                      {fields.map((f) => (
+                        <div key={f.name} className="flex gap-2 items-start">
+                          <span className="text-[var(--color-ink-soft)] text-xs shrink-0 w-24 pt-0.5">{f.label}:</span>
+                          {f.upload ? (
+                            row[f.name] ? (
+                              <img
+                                src={row[f.name]}
+                                alt=""
+                                className="w-16 h-16 object-cover rounded border border-[var(--color-paper-line)]"
+                              />
+                            ) : (
+                              <span className="text-xs text-[var(--color-ink-soft)]">&mdash;</span>
+                            )
+                          ) : (
+                            <span className="break-words">{row[f.name] || '\u2014'}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(row)}
+                        className="bg-[var(--color-brass)] text-[var(--color-navy)] text-xs font-semibold px-3 py-1.5 rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteRow(row.id)}
+                        className="bg-red-700 text-white text-xs font-semibold px-3 py-1.5 rounded"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+      </div>
     </div>
   )
 }
@@ -127,14 +385,15 @@ function ContentForm({ table, fields, onAdded }) {
 
   async function submit(e) {
     e.preventDefault()
-    const missing = fields.find((f) => !values[f.name])
+    const missing = fields.find((f) => !f.optional && !values[f.name])
     if (missing) {
       setMsg(`${missing.label} is required.`)
       return
     }
     setBusy(true)
     setMsg('')
-    const { error } = await supabase.from(table).insert([values])
+    const payload = buildPayload(fields, values)
+    const { error } = await supabase.from(table).insert([payload])
     setBusy(false)
     if (error) {
       setMsg(error.message)
@@ -147,7 +406,7 @@ function ContentForm({ table, fields, onAdded }) {
 
   return (
     <form onSubmit={submit} className="bg-white rounded-md border border-[var(--color-paper-line)] p-5 space-y-3">
-      <h4 className="font-mono text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">{table}</h4>
+      <h4 className="font-mono text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">Add to {table}</h4>
       {fields.map((f) =>
         f.upload ? (
           <ImageUploadField
@@ -160,7 +419,8 @@ function ContentForm({ table, fields, onAdded }) {
         ) : (
           <input
             key={f.name}
-            required
+            type={f.type === 'number' ? 'number' : 'text'}
+            required={!f.optional}
             placeholder={f.label}
             value={values[f.name]}
             onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
@@ -185,6 +445,9 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [contentRefreshKey, setContentRefreshKey] = useState(0)
+
+  const bumpContent = () => setContentRefreshKey((k) => k + 1)
 
   async function loadBookings() {
     setLoading(true)
@@ -272,7 +535,7 @@ export default function AdminDashboard() {
               {loading && (
                 <tr>
                   <td colSpan={7} className="text-center py-8 text-[var(--color-ink-soft)]">
-                    Loading bookings\u2026
+                    Loading bookings&hellip;
                   </td>
                 </tr>
               )}
@@ -337,7 +600,10 @@ export default function AdminDashboard() {
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {Object.entries(CONTENT_TABLES).map(([table, fields]) => (
-            <ContentForm key={table} table={table} fields={fields} />
+            <div key={table}>
+              <ManageList table={table} fields={fields} refreshKey={contentRefreshKey} onChanged={bumpContent} />
+              <ContentForm table={table} fields={fields} onAdded={bumpContent} />
+            </div>
           ))}
         </div>
       </div>

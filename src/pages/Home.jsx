@@ -20,10 +20,10 @@ export default function Home() {
     async function fetchHomeContent() {
       try {
         const [notices, events, committee, gallery] = await Promise.all([
-          supabase.from('notices').select('*').order('id', { ascending: false }),
-          supabase.from('events').select('*').order('id', { ascending: false }),
-          supabase.from('committee').select('*').order('display_order', { ascending: true }),
-          supabase.from('gallery').select('*').order('id', { ascending: false })
+          -          supabase.from('notices').select('*').order('id', { ascending: false }),
+-          supabase.from('events').select('*').order('id', { ascending: false }),
++          supabase.from('notices').select('*').order('display_order', { ascending: true, nullsFirst: false }).order('id', { ascending: false }),
++          supabase.from('events').select('*').order('display_order', { ascending: true, nullsFirst: false }).order('id', { ascending: false }),
         ])
 
         const firstError =
